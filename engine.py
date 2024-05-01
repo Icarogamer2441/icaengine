@@ -39,7 +39,7 @@ class Game:
         self.gravity_force = 1
         self.objects = {}
     
-    def run(self):
+    def Start(self):
         while True:
             self.screen.fill(self.screencolor)
             for event in pg.event.get():
