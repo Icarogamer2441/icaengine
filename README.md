@@ -1,2 +1,2 @@
 # icaengine
-my python game engine
+my open source python game engine
