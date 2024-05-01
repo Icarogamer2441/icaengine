@@ -21,7 +21,7 @@ class ObjSquare:
     def draw(self, screen):
         pg.draw.rect(screen, self.color, self.rect, border_radius=self.border_radius)
 
-class Engine:
+class Game:
     def __init__(self, screensize, playerx, playery, gameversion, gamename):
         pg.init()
         self.screensize = screensize
@@ -29,7 +29,7 @@ class Engine:
         self.clock = pg.time.Clock()
         self.gamename = gamename
         self.screencolor = (0,0,0)
-        self.functions = {}
+        self.scripts = {}
         self.gameversion = gameversion
         pg.display.set_caption(f"{self.gamename} - {self.gameversion}")
         self.player_y = playerx
@@ -52,8 +52,8 @@ class Engine:
             for obj in self.objects:
                 self.objects[obj].draw(self.screen)
             
-            for function in self.functions:
-                exec(self.functions[function])
+            for function in self.scripts:
+                exec(self.scripts[function])
             
             self.gravity += self.gravity_force
 
