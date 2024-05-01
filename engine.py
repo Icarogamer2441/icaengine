@@ -36,7 +36,8 @@ class Engine:
         self.player_y = playerx
         self.player_x = playery
         self.player_vel = 5
-        self.gravity_force = 5
+        self.gravity = 0
+        self.gravity_force = 2
     
     def run(self):
         while True:
@@ -54,15 +55,23 @@ class Engine:
             for function in self.functions:
                 exec(self.functions[function])
 
+            self.gravity += self.gravity_force
+
             self.clock.tick(60)
 
             pg.display.update()
     
-    def PlayerMove(self):
+    def PlayerMoveWASD(self):
         if self.key[K_w]:
             self.player_y -= self.player_vel
         elif self.key[K_s]:
             self.player_y += self.player_vel
+        if self.key[K_a]:
+            self.player_x -= self.player_vel
+        elif self.key[K_d]:
+            self.player_x += self.player_vel
+    
+    def PlayerMoveAD(self):
         if self.key[K_a]:
             self.player_x -= self.player_vel
         elif self.key[K_d]:
