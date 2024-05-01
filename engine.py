@@ -48,14 +48,14 @@ class Engine:
                     exit()
             
             self.key = pg.key.get_pressed()
+
+            self.gravity += self.gravity_force
             
             for obj in self.objects:
                 self.objects[obj].draw(self.screen)
             
             for function in self.functions:
                 exec(self.functions[function])
-
-            self.gravity += self.gravity_force
 
             self.clock.tick(60)
 
