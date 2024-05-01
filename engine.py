@@ -37,7 +37,7 @@ class Engine:
         self.player_x = playery
         self.player_vel = 5
         self.gravity = 0
-        self.gravity_force = 2
+        self.gravity_force = 1
     
     def run(self):
         while True:
