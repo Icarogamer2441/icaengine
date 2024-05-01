@@ -24,7 +24,6 @@ class ObjSquare:
 class Engine:
     def __init__(self, screensize, playerx, playery, gameversion, gamename):
         pg.init()
-        self.objects = {}
         self.screensize = screensize
         self.screen = pg.display.set_mode(self.screensize)
         self.clock = pg.time.Clock()
@@ -38,6 +37,7 @@ class Engine:
         self.player_vel = 5
         self.gravity = 0
         self.gravity_force = 1
+        self.objects = {}
     
     def run(self):
         while True:
@@ -48,7 +48,7 @@ class Engine:
                     exit()
             
             self.key = pg.key.get_pressed()
-            
+
             for obj in self.objects:
                 self.objects[obj].draw(self.screen)
             
