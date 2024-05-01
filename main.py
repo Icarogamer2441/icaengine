@@ -14,7 +14,7 @@ def main():
     engine.functions["Collision"] = """
 player_antx = self.player_x
 player_anty = self.player_y
-self.PlayerMove()
+self.PlayerMoveWASD()
 player_rect = pg.Rect(self.player_x, self.player_y, 50, 50)
 wall_rect = pg.Rect(0, 400, 760, 50)
 if self.check_collision(player_rect, wall_rect):
