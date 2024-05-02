@@ -1,0 +1,12 @@
+player_antx = self.player_x
+player_anty = self.player_y
+self.PlayerMoveAD()
+self.player_y += self.gravity
+player_collision = self.collision_box(self.player_x,self.player_y,50,50)
+ground_collision = self.collision_box(0,500,760,170)
+if self.check_collision(player_collision, ground_collision):
+    self.gravity = 0
+    self.player_y = player_anty - 1
+    self.player_x = player_antx
+    if self.key[K_SPACE]:
+        self.gravity = -10
