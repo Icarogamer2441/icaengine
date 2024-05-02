@@ -24,12 +24,19 @@ class ObjSquare:
 class Game:
     def __init__(self, screensize, playerx, playery, gameversion, gamename):
         pg.init()
+        self.variables = {"points": 0}
+        self.events = {"OnGameStart": "",
+        "OnPlayerWalk": "",
+        "OnGameEnd": "",
+        "OnGameRunning": "",
+        "OnGameStartAndEnd": ""}
         self.screensize = screensize
         self.screen = pg.display.set_mode(self.screensize)
         self.clock = pg.time.Clock()
         self.gamename = gamename
         self.screencolor = (0,0,0)
         self.scripts = {}
+        self.filescripts = []
         self.gameversion = gameversion
         pg.display.set_caption(f"{self.gamename} - {self.gameversion}")
         self.player_y = playerx
@@ -40,10 +47,14 @@ class Game:
         self.objects = {}
     
     def Start(self):
+        exec(self.events.get("OnGameStart"))
+        exec(self.events.get("OnGameStartAndEnd"))
         while True:
             self.screen.fill(self.screencolor)
             for event in pg.event.get():
                 if event.type == QUIT:
+                    exec(self.events.get("OnGameEnd"))
+                    exec(self.events.get("OnGameStartAndEnd"))
                     pg.quit()
                     exit()
             
@@ -52,8 +63,15 @@ class Game:
             for obj in self.objects:
                 self.objects[obj].draw(self.screen)
             
-            for function in self.scripts:
-                exec(self.scripts[function])
+            for script in self.scripts:
+                exec(self.scripts[script])
+            
+            for filename in self.filescripts:
+                with open(filename + ".icaeng", "r") as f:
+                    content = f.read()
+                exec(content)
+            
+            exec(self.events.get("OnGameRunning"))
             
             self.gravity += self.gravity_force
 
@@ -63,18 +81,25 @@ class Game:
     
     def PlayerMoveWASD(self):
         if self.key[K_w]:
+            exec(self.events.get("OnPlayerWalk"))
             self.player_y -= self.player_vel
         elif self.key[K_s]:
+            exec(self.events.get("OnPlayerWalk"))
             self.player_y += self.player_vel
         if self.key[K_a]:
+            exec(self.events.get("OnPlayerWalk"))
             self.player_x -= self.player_vel
         elif self.key[K_d]:
+            exec(self.events.get("OnPlayerWalk"))
             self.player_x += self.player_vel
+
     
     def PlayerMoveAD(self):
         if self.key[K_a]:
+            exec(self.events.get("OnPlayerWalk"))
             self.player_x -= self.player_vel
         elif self.key[K_d]:
+            exec(self.events.get("OnPlayerWalk"))
             self.player_x += self.player_vel
     
     def check_collision(self, rect1, rect2):
@@ -82,3 +107,10 @@ class Game:
                 rect1[0] + rect1[2] > rect2[0] and
                 rect1[1] < rect2[1] + rect2[3] and
                 rect1[1] + rect1[3] > rect2[1])
+
+    def change_points(self, add, remove):
+        self.variables["points"] += add
+        self.variables["points"] -= remove
+    
+    def collision_box(self, x,y,sizex,sizey):
+        return pg.Rect(x,y,sizex,sizey)
