@@ -49,7 +49,7 @@ class Game:
         "OnGameRunning": "",
         "OnGameStartAndEnd": "",
         "OnMouseClick": "",
-        "OnMouseHover": ""}
+        "OnMouseHover": "",}
         self.texts = {}
         self.screensize = screensize
         self.screen = pg.display.set_mode(self.screensize)
@@ -154,6 +154,7 @@ class Game:
     def on_mouse_click(self):
         if self.event.type == MOUSEBUTTONDOWN:
             if BUTTON_LEFT:
+                exec(self.events.get("OnMouseClick"))
                 return True
             else:
                 return False
@@ -161,6 +162,7 @@ class Game:
     def on_mouse_hover(self, x, y, width, height):
         mouse_x, mouse_y = pg.mouse.get_pos()
         if x < mouse_x < x + width and y < mouse_y < y + height:
+            exec(self.events.get("OnMouseHover"))
             return True
         else:
             return False
