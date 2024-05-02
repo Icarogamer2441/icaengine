@@ -21,6 +21,24 @@ class ObjSquare:
     def draw(self, screen):
         pg.draw.rect(screen, self.color, self.rect, border_radius=self.border_radius)
 
+class ObjTriangle:
+        def __init__(self, x1, y1, x2, y2, x3, y3, color):
+            self.points = [(x1, y1), (x2, y2), (x3, y3)]
+            self.color = color
+        
+        def draw(self, screen):
+            pg.draw.polygon(screen, self.color, self.points)
+
+class ObjLine:
+        def __init__(self, x1, y1, x2, y2, width, color):
+            self.start = (x1, y1)
+            self.end = (x2, y2)
+            self.width = width
+            self.color = color
+        
+        def draw(self, screen):
+            pg.draw.line(screen, self.color, self.start, self.end, self.width)
+
 class Game:
     def __init__(self, screensize, playerx, playery, gameversion, gamename):
         pg.init()
@@ -29,7 +47,10 @@ class Game:
         "OnPlayerWalk": "",
         "OnGameEnd": "",
         "OnGameRunning": "",
-        "OnGameStartAndEnd": ""}
+        "OnGameStartAndEnd": "",
+        "OnMouseClick": "",
+        "OnMouseHover": ""}
+        self.texts = {}
         self.screensize = screensize
         self.screen = pg.display.set_mode(self.screensize)
         self.clock = pg.time.Clock()
@@ -52,7 +73,8 @@ class Game:
         while True:
             self.screen.fill(self.screencolor)
             for event in pg.event.get():
-                if event.type == QUIT:
+                self.event = event
+                if  event.type == QUIT:
                     exec(self.events.get("OnGameEnd"))
                     exec(self.events.get("OnGameStartAndEnd"))
                     pg.quit()
@@ -70,6 +92,13 @@ class Game:
                 with open(filename + ".icaeng", "r") as f:
                     content = f.read()
                 exec(content)
+            
+            for text in self.texts:
+                textvalue = self.texts.get(text)
+                if textvalue.startswith("self.create_text"):
+                    exec(textvalue)
+                else:
+                    print(f"inavlid script to create text on text: {text}. with code: {textvalue}")
             
             exec(self.events.get("OnGameRunning"))
             
@@ -114,3 +143,31 @@ class Game:
     
     def collision_box(self, x,y,sizex,sizey):
         return pg.Rect(x,y,sizex,sizey)
+
+    def change_background_color(self, new_color):
+        self.screencolor = new_color
+    
+    def play_sound(self, sound_file):
+        sound = pg.mixer.Sound(sound_file)
+        sound.play()
+
+    def on_mouse_click(self):
+        if self.event.type == MOUSEBUTTONDOWN:
+            if BUTTON_LEFT:
+                return True
+            else:
+                return False
+
+    def on_mouse_hover(self, x, y, width, height):
+        mouse_x, mouse_y = pg.mouse.get_pos()
+        if x < mouse_x < x + width and y < mouse_y < y + height:
+            return True
+        else:
+            return False
+        
+    def create_text(self, text, font_size, font_color, x, y, font_name=None):
+        font = pg.font.Font(font_name, font_size) if font_name else pg.font.Font(None, font_size)
+        text_surface = font.render(text, True, font_color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (x, y)
+        self.screen.blit(text_surface, text_rect)
