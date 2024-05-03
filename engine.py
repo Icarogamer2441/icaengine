@@ -173,3 +173,11 @@ class Game:
         text_rect = text_surface.get_rect()
         text_rect.center = (x, y)
         self.screen.blit(text_surface, text_rect)
+    
+    def create_sprite(self, image_path, x, y, width, height):
+        sprite_image = pg.image.load(image_path).convert_alpha()
+        sprite_image = pg.transform.scale(sprite_image, (width, height))
+        sprite_rect = sprite_image.get_rect()
+        sprite_rect.x = x
+        sprite_rect.y = y
+        return sprite_image, sprite_rect
